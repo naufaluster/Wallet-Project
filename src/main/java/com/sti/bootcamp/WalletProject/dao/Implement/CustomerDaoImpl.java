@@ -44,6 +44,7 @@ public class CustomerDaoImpl implements CustomerDao {
 
     @Override
     public Customer register(Customer customer) throws NotFoundException {
+        System.out.println(customer);
         String cif="";
         Query query = em.createQuery("FROM Customer order by cif desc");
         query.setMaxResults(1);
@@ -67,9 +68,9 @@ public class CustomerDaoImpl implements CustomerDao {
             if (customer.getPassword().equals(cust.getPassword())) {
                 return cust;
             }
-            throw new NotFoundException("02", "Wrong Email or password");
+            throw new NotFoundException("02", "Wrong Username or password");
         }
-        throw new NotFoundException("02", "Wrong Email or password");
+        throw new NotFoundException("02", "Wrong Username or password");
     }
 
     @Override
@@ -78,8 +79,14 @@ public class CustomerDaoImpl implements CustomerDao {
     }
 
     @Override
-    public Customer getUname(String username) throws NotFoundException {
-        return em.find(Customer.class, username);
+    public Customer getUname(String username) throws UserException {
+        Customer customer = customerRepository.findByUsername(username);
+        if(customer != null){
+            throw new UserException("66","Username exist");
+        } else {
+            return customer;
+        }
+
     }
 
 }

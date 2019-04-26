@@ -1,12 +1,14 @@
 package com.sti.bootcamp.WalletProject.controller;
 
 import com.sti.bootcamp.WalletProject.config.NotFoundException;
+import com.sti.bootcamp.WalletProject.config.UserException;
 import com.sti.bootcamp.WalletProject.dao.CustomerDao;
 import com.sti.bootcamp.WalletProject.model.Customer;
 import com.sti.bootcamp.WalletProject.model.dto.CommonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @CrossOrigin
@@ -30,7 +32,7 @@ public class CustomerController {
             resp.setData(cust);
         } else {
             resp.setResponseCode("99");
-            resp.setResponeMassage("register customer failed");
+            resp.setResponeMassage("login customer failed");
             resp.setData(null);
             return resp;
         }
@@ -51,19 +53,15 @@ public class CustomerController {
         return commonResponse;
     }
 
+    @Transactional
     @PostMapping("/customer-post")
-    public CommonResponse<Customer> registerCustomer(@RequestBody Customer customer) throws NotFoundException{
+    public CommonResponse<Customer> registerCustomer(@RequestBody Customer customer) throws NotFoundException, UserException {
         CommonResponse<Customer> comResp = new CommonResponse<>();
         Customer uname = customerDao.getUname(customer.getUsername());
 //        Customer cus = customerDao.register(customer);
-        if(uname != null){
-            comResp.setData(customerDao.register(customer));
-        } else {
-            comResp.setResponseCode("99");
-            comResp.setResponeMassage("register customer failed");
-            comResp.setData(null);
-            return comResp;
-        }
+        comResp.setData(customerDao.register(customer));
+//            comResp.setData(cus);
+
         return comResp;
     }
 
