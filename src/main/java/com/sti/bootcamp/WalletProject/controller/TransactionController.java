@@ -1,11 +1,12 @@
 package com.sti.bootcamp.WalletProject.controller;
 
 import com.sti.bootcamp.WalletProject.config.NotFoundException;
-import com.sti.bootcamp.WalletProject.dao.AccountDao;
+import com.sti.bootcamp.WalletProject.config.UserException;
 import com.sti.bootcamp.WalletProject.dao.TransactionDao;
 import com.sti.bootcamp.WalletProject.model.Account;
 import com.sti.bootcamp.WalletProject.model.Transaction;
 import com.sti.bootcamp.WalletProject.model.dto.CommonResponse;
+import com.sti.bootcamp.WalletProject.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ public class TransactionController {
     private TransactionDao transactionDao;
 
     @Autowired
-    private AccountDao accountDao;
+    private AccountRepository ar;
 
     @GetMapping("/search-transaction/{cif}")
     public CommonResponse<List<Transaction>> getList(@PathVariable (name = "cif") String cif){
@@ -37,42 +38,68 @@ public class TransactionController {
         return cr;
     }
 
-    @PostMapping("/transaction")
-    public CommonResponse<Transaction> transfer(@RequestBody Transaction transaction) throws NotFoundException {
-        CommonResponse<Transaction> commonResponse = new CommonResponse<Transaction>();
-        String credit = transaction.getAccountNumberCredit();
-        float amountCredit = transaction.getAmount();
-        String debit = transaction.getAccountNumberDebit();
-        float amountDebit = transaction.getAmount();
-        String codeTransaction = transaction.getTransactionType();
-        if (codeTransaction == "TOPUP001"){
-            creditAccount(credit,amountCredit);
-            commonResponse.setData(transactionDao.saveTrans(transaction));
-        } else if (codeTransaction == "TRANS001"){
-            creditAccount(credit,amountCredit);
-            debitAccount(debit,amountDebit);
-            commonResponse.setData(transactionDao.saveTrans(transaction));
-        } else if (codeTransaction == "WTHDL001"){
-            debitAccount(debit,amountDebit);
-            commonResponse.setData(transactionDao.saveTrans(transaction));
+    @PostMapping("/topup")
+    public CommonResponse<Transaction> topup(@RequestBody Transaction transaction) {
+        CommonResponse<Transaction> comResp = new CommonResponse<>();
+        if(transaction.getAmount() < 25000){
+            comResp.setResponseCode("99");
+            comResp.setResponeMassage("Amount is less than Rp. 20,000.00");
+            return comResp;
         } else {
-            throw new NotFoundException("500","Exception found");
+            Transaction tr = transactionDao.topup(transaction);
+            comResp.setData(tr);
         }
-        return commonResponse;
+        return comResp;
     }
 
-    public CommonResponse<Account> creditAccount(String accountNumberCredit, Float amountCredit) throws NotFoundException{
-        CommonResponse<Account> resp = new CommonResponse<>();
-        String accountNumber = accountNumberCredit;
-        resp.setData(accountDao.credit(accountNumber, amountCredit));
-        return resp;
+    @PostMapping("/transfer")
+    public CommonResponse<Transaction> transfer(@RequestBody Transaction transaction) {
+        Account debit = ar.findById(transaction.getAccountNumberDebit()).orElse(null);
+        Account credit = ar.findById(transaction.getAccountNumberCredit()).orElse(null);
+
+        CommonResponse<Transaction> comResp = new CommonResponse<>();
+        if(debit.getBalance() <= 100000){
+            comResp.setResponseCode("66");
+            comResp.setResponeMassage("Your balance is less than Rp. 100,000.00");
+            return comResp;
+        } else if (transaction.getAmount() >= debit.getBalance() ) {
+            comResp.setResponseCode("99");
+            comResp.setResponeMassage("Your amount is less than Balance");
+            return comResp;
+        } else if (credit == null){
+            comResp.setResponseCode("69");
+            comResp.setResponeMassage("Reciepent does not exist");
+            return comResp;
+        } else {
+            Transaction tr = transactionDao.transfer(transaction);
+            comResp.setData(tr);
+        }
+        return comResp;
     }
 
-    public CommonResponse<Account> debitAccount(String accountNumberDebit, Float amountDebit) throws NotFoundException{
-        CommonResponse<Account> resp = new CommonResponse<>();
-        String accountNumber = accountNumberDebit;
-        resp.setData(accountDao.debit(accountNumber, amountDebit));
-        return resp;
+    @PostMapping("/withdrawal")
+    public CommonResponse<Transaction> withdrawal(@RequestBody Transaction transaction) {
+        Account acc = ar.findById(transaction.getAccountNumberDebit()).orElse(null);
+        CommonResponse<Transaction> comResp = new CommonResponse<>();
+        if(acc.getBalance() <= 100000){
+            comResp.setResponseCode("69");
+            comResp.setResponeMassage("Your balance is less than Rp. 100,000.00");
+            return comResp;
+        } else if (transaction.getAmount() >= acc.getBalance() ) {
+            comResp.setResponseCode("96");
+            comResp.setResponeMassage("Amount is less than Balance");
+            return comResp;
+        } else if (transaction.getAmount() < 50000) {
+            comResp.setResponseCode("66");
+            comResp.setResponeMassage("Amount is less than 50000");
+            return comResp;
+        } else {
+            Transaction tr = transactionDao.withdrawal(transaction);
+            comResp.setData(tr);
+        }
+        return comResp;
     }
+
+
 
 }

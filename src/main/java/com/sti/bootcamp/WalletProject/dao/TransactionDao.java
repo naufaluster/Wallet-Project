@@ -11,10 +11,10 @@ public interface TransactionDao {
 
     List<Transaction> getlist(String cif);
 
-    Transaction topup(Transaction transaction) throws NotFoundException;
+    Transaction topup(Transaction transaction);
 
-    Transaction transfer(Transaction transaction) throws NotFoundException;
+    Transaction transfer(Transaction transaction);
 
-    Transaction withdrawal(Transaction transaction) throws NotFoundException;
+    Transaction withdrawal(Transaction transaction);
 
 }
