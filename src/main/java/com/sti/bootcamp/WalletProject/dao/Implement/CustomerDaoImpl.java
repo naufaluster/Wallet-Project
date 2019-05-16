@@ -1,7 +1,7 @@
 package com.sti.bootcamp.WalletProject.dao.Implement;
 
-import com.sti.bootcamp.WalletProject.config.NotFoundException;
-import com.sti.bootcamp.WalletProject.config.UserException;
+import com.sti.bootcamp.WalletProject.exception.NotFoundException;
+import com.sti.bootcamp.WalletProject.exception.UserException;
 import com.sti.bootcamp.WalletProject.dao.CustomerDao;
 import com.sti.bootcamp.WalletProject.model.Customer;
 import com.sti.bootcamp.WalletProject.repository.CustomerRepository;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -81,12 +80,18 @@ public class CustomerDaoImpl implements CustomerDao {
     @Override
     public Customer getUname(String username) throws UserException {
         Customer customer = customerRepository.findByUsername(username);
+        return customer;
+
+    }
+
+    @Override
+    public Customer getUsername(String username) throws UserException {
+        Customer customer = customerRepository.findByUsername(username);
         if(customer != null){
-            throw new UserException("66","Username exist");
+            throw new UserException("66","Username does exist");
         } else {
             return customer;
         }
-
     }
 
 }

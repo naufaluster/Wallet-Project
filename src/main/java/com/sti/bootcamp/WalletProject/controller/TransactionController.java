@@ -1,7 +1,5 @@
 package com.sti.bootcamp.WalletProject.controller;
 
-import com.sti.bootcamp.WalletProject.config.NotFoundException;
-import com.sti.bootcamp.WalletProject.config.UserException;
 import com.sti.bootcamp.WalletProject.dao.TransactionDao;
 import com.sti.bootcamp.WalletProject.model.Account;
 import com.sti.bootcamp.WalletProject.model.Transaction;
@@ -45,6 +43,10 @@ public class TransactionController {
             comResp.setResponseCode("99");
             comResp.setResponeMassage("Amount is less than Rp. 20,000.00");
             return comResp;
+        } else if (transaction.getAmount() == 0){
+            comResp.setResponseCode("96");
+            comResp.setResponeMassage("Please input your amount");
+            return comResp;
         } else {
             Transaction tr = transactionDao.topup(transaction);
             comResp.setData(tr);
@@ -66,9 +68,17 @@ public class TransactionController {
             comResp.setResponseCode("99");
             comResp.setResponeMassage("Your amount is less than Balance");
             return comResp;
+        } else if (transaction.getAmount() == 0){
+            comResp.setResponseCode("96");
+            comResp.setResponeMassage("Please input your amount");
+            return comResp;
         } else if (credit == null){
             comResp.setResponseCode("69");
             comResp.setResponeMassage("Reciepent does not exist");
+            return comResp;
+        } else if (credit == debit){
+            comResp.setResponseCode("20");
+            comResp.setResponeMassage("You can\'t transfer to the same account");
             return comResp;
         } else {
             Transaction tr = transactionDao.transfer(transaction);
@@ -92,6 +102,10 @@ public class TransactionController {
         } else if (transaction.getAmount() < 50000) {
             comResp.setResponseCode("66");
             comResp.setResponeMassage("Amount is less than 50000");
+            return comResp;
+        } else if (transaction.getAmount() == 0){
+            comResp.setResponseCode("99");
+            comResp.setResponeMassage("Please input your amount");
             return comResp;
         } else {
             Transaction tr = transactionDao.withdrawal(transaction);

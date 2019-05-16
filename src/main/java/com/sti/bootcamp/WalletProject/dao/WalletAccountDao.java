@@ -16,4 +16,6 @@ public interface WalletAccountDao {
 
     List<WalletAccount> getlistbyCif(String cif);
 
+    WalletAccount topup(WalletAccount walletAccount);
+
 }

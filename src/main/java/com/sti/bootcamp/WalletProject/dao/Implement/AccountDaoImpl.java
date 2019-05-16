@@ -1,9 +1,10 @@
 package com.sti.bootcamp.WalletProject.dao.Implement;
 
-import com.sti.bootcamp.WalletProject.config.NotFoundException;
+import com.sti.bootcamp.WalletProject.exception.NotFoundException;
 import com.sti.bootcamp.WalletProject.dao.AccountDao;
 import com.sti.bootcamp.WalletProject.model.Account;
 import com.sti.bootcamp.WalletProject.repository.AccountRepository;
+import com.sti.bootcamp.WalletProject.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
@@ -21,6 +22,9 @@ public class AccountDaoImpl implements AccountDao {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private CustomerRepository cr;
 
 
     @Override

@@ -1,4 +1,4 @@
-package com.sti.bootcamp.WalletProject.config;
+package com.sti.bootcamp.WalletProject.exception;
 
 public class BaseCommonException extends Exception {
     protected String code;

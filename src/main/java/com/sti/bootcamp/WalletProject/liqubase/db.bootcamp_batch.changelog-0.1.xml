@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet author="Naufal" id="bootcamp_batch0.1-1">
+        <createTable tableName="bootcamp_batch">
+            <column name="id" type="INT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(45)"/>
+            <column name="startdate" type="DATETIME"/>
+            <column name="finishdate" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Naufal" id="bootcamp_batch1">
+        <loadData encoding="UTF-8"
+                  file="src/main/java/com/sti/bootcamp/WalletProject/liqubase/bootcamp_batch.csv"
+                  tableName="bootcamp_batch">
+        </loadData>
+    </changeSet>
+
+
+
+
+
+</databaseChangeLog>
+

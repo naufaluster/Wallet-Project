@@ -1,7 +1,7 @@
 package com.sti.bootcamp.WalletProject.controller;
 
-import com.sti.bootcamp.WalletProject.config.NotFoundException;
-import com.sti.bootcamp.WalletProject.config.UserException;
+import com.sti.bootcamp.WalletProject.exception.NotFoundException;
+import com.sti.bootcamp.WalletProject.exception.UserException;
 import com.sti.bootcamp.WalletProject.dao.CustomerDao;
 import com.sti.bootcamp.WalletProject.model.Customer;
 import com.sti.bootcamp.WalletProject.model.dto.CommonResponse;
@@ -19,9 +19,11 @@ public class CustomerController {
     private CustomerDao customerDao;
 
     @GetMapping("/customers")
-    public List<Customer> getList() {
+    public CommonResponse<List<Customer>> getList() {
+        CommonResponse<List<Customer>> resp = new CommonResponse<>();
         List<Customer> getList = customerDao.getList();
-        return getList;
+        resp.setData(getList);
+        return resp;
     }
 
     @PostMapping(path = "/login")
@@ -57,7 +59,7 @@ public class CustomerController {
     @PostMapping("/customer-post")
     public CommonResponse<Customer> registerCustomer(@RequestBody Customer customer) throws NotFoundException, UserException {
         CommonResponse<Customer> comResp = new CommonResponse<>();
-        Customer uname = customerDao.getUname(customer.getUsername());
+        Customer uname = customerDao.getUsername(customer.getUsername());
 //        Customer cus = customerDao.register(customer);
         comResp.setData(customerDao.register(customer));
 //            comResp.setData(cus);

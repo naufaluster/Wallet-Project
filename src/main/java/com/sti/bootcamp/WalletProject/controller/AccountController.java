@@ -1,6 +1,6 @@
 package com.sti.bootcamp.WalletProject.controller;
 
-import com.sti.bootcamp.WalletProject.config.NotFoundException;
+import com.sti.bootcamp.WalletProject.exception.NotFoundException;
 import com.sti.bootcamp.WalletProject.dao.AccountDao;
 import com.sti.bootcamp.WalletProject.model.Account;
 import com.sti.bootcamp.WalletProject.model.dto.CommonResponse;

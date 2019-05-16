@@ -1,4 +1,4 @@
-package com.sti.bootcamp.WalletProject.config;
+package com.sti.bootcamp.WalletProject.exception;
 
 import com.sti.bootcamp.WalletProject.model.dto.CommonResponse;
 import org.slf4j.Logger;

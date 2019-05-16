@@ -14,24 +14,24 @@ public class WalletAccount {
     @Column (name = "id")
     private int id;
 
-    @ManyToOne
-    @JoinColumn (name = "walletid")
-    private Wallet walletid;
 
-    @ManyToOne
-    @JoinColumn (name = "accountnumber")
-    private Account accountnumber;
+    @Column (name = "walletid")
+    private String walletid;
 
-    @Column (name = "walletname")
-    private String walletname;
+
+    @Column (name = "accountnumber")
+    private String accountnumber;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column (name = "createdate")
     private Date createdate;
 
-    @Column (name = "status")
-    private String status;
+    @Column (name = "notelp")
+    private int notelp;
+
+    @Column (name = "amount")
+    private float amount;
 
     @ManyToOne
     @JoinColumn (name = "cif")
@@ -53,19 +53,19 @@ public class WalletAccount {
         this.id = id;
     }
 
-    public Wallet getWalletid() {
+    public String getWalletid() {
         return walletid;
     }
 
-    public void setWalletid(Wallet walletid) {
+    public void setWalletid(String walletid) {
         this.walletid = walletid;
     }
 
-    public Account getAccountnumber() {
+    public String getAccountnumber() {
         return accountnumber;
     }
 
-    public void setAccountnumber(Account accountnumber) {
+    public void setAccountnumber(String accountnumber) {
         this.accountnumber = accountnumber;
     }
 
@@ -77,20 +77,20 @@ public class WalletAccount {
         this.createdate = createdate;
     }
 
-    public String getStatus() {
-        return status;
+    public int getNotelp() {
+        return notelp;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setNotelp(int notelp) {
+        this.notelp = notelp;
     }
 
-    public String getWalletname() {
-        return walletname;
+    public float getAmount() {
+        return amount;
     }
 
-    public void setWalletname(String walletname) {
-        this.walletname = walletname;
+    public void setAmount(float amount) {
+        this.amount = amount;
     }
 
 }

@@ -1,6 +1,6 @@
 package com.sti.bootcamp.WalletProject.dao;
 
-import com.sti.bootcamp.WalletProject.config.NotFoundException;
+import com.sti.bootcamp.WalletProject.exception.NotFoundException;
 import com.sti.bootcamp.WalletProject.model.Account;
 
 import java.util.List;

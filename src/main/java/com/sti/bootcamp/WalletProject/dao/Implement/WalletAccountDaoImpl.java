@@ -1,10 +1,15 @@
 package com.sti.bootcamp.WalletProject.dao.Implement;
 
 import com.sti.bootcamp.WalletProject.dao.WalletAccountDao;
+import com.sti.bootcamp.WalletProject.model.Account;
 import com.sti.bootcamp.WalletProject.model.Wallet;
 import com.sti.bootcamp.WalletProject.model.WalletAccount;
+import com.sti.bootcamp.WalletProject.model.dto.CommonResponse;
+import com.sti.bootcamp.WalletProject.repository.AccountRepository;
 import com.sti.bootcamp.WalletProject.repository.WalletAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,6 +26,9 @@ public class WalletAccountDaoImpl implements WalletAccountDao {
 
     @Autowired
     private WalletAccountRepository walletAccountRepository;
+
+    @Autowired
+    private AccountRepository ar;
 
     @Override
     public List<WalletAccount> getlist() {
@@ -56,6 +64,16 @@ public class WalletAccountDaoImpl implements WalletAccountDao {
     public List<WalletAccount> getlistbyCif(String cif) {
         return walletAccountRepository.getListAccount(cif);
     }
+
+    @Override
+    public WalletAccount topup(WalletAccount walletAccount) {
+        Account acc = ar.findById(walletAccount.getAccountnumber()).orElse(null);
+        acc.setBalance(acc.getBalance()-walletAccount.getAmount());
+        ar.save(acc);
+        return walletAccountRepository.save(walletAccount);
+    }
+
+
 
 
 }
