@@ -1,5 +1,6 @@
 package com.sti.bootcamp.WalletProject.config.security;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -21,10 +22,14 @@ public class CustomTokenEnhancer implements TokenEnhancer {
 
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
+        UserDetails user = (UserDetails) authentication.getPrincipal();
+        CustomUser customer = (CustomUser) user;
+
         Map<String, Object> additionalInfo = new HashMap<>();
         additionalInfo.put("organization", authentication.getName());
 //        additionalInfo.put("first_name", );
 //        additionalInfo.put("dateFormat", dateFormat);
+        additionalInfo.put("firstname", customer.getFirstname());
         additionalInfo.put("seconds", timestamp);
         additionalInfo.put("date", millis);
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
