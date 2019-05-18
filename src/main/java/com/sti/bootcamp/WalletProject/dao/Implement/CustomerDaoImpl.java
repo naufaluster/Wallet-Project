@@ -48,12 +48,12 @@ public class CustomerDaoImpl implements CustomerDao {
         Query query = em.createQuery("FROM Customer order by cif desc");
         query.setMaxResults(1);
         if(query.getResultList().isEmpty()){
-            cif = "CIF-0001";
+            cif = "CIF-001";
         } else {
             Customer cus = (Customer) query.getSingleResult();
             int cifn =cus.getCif().length();
-            String tid= cus.getCif().substring(5,cifn);
-            cif="CIF-"+String.format("%04d", Integer.parseInt(tid) +1);
+            String tid= cus.getCif().substring(4,cifn);
+            cif="CIF-"+String.format("%03d", Integer.parseInt(tid) +1);
         }
         customer.setCif(cif);
         customerRepository.save(customer);
